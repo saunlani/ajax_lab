@@ -99,5 +99,21 @@ namespace ajax_lab.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult GetBooksByAll(string userinput)
+        {
+            Library2Entities db = new Library2Entities();
+            int.TryParse(userinput, out int userint);
+            List<book> list = db.books
+                .Where(c => c.Title.Contains(userinput) 
+                || c.Author.Contains(userinput)
+                || c.YearPublished == userint
+                || c.Publisher.Contains(userinput)
+                || c.Genre.Contains(userinput)
+                ).ToList();
+
+            return Json(list);
+        }
     }
 }

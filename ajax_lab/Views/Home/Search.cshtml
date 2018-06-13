@@ -24,6 +24,11 @@ Genre:
 <input type="text" id="genre" class="form-control"
        oninput="search4()" />
 
+<br />
+All:
+<input type="text" id="userinput" class="form-control"
+       oninput="search5()" />
+
 <table class="table table-striped" id="books"></table>
 
 <script type="text/javascript"
@@ -197,6 +202,46 @@ Genre:
                 type: 'POST',
                 url: '/Home/GetBooksByGenre',
                 data: '{genre: "' + document.getElementById("genre").value
+                    + '"}',
+                contentType: 'application/json; charset-utf-8',
+                dataType: 'json',
+                success:
+                    function (response) {
+                        var tableHTML = "<tr><th>Author</th>"
+                            + "<th>Title</th>"
+                            + "<th>Year Published</th>"
+                            + "<th>Publisher</th>"
+                            + "<th>Genre</th></tr>";
+                        for (var i = 0; i < response.length; i++) {
+                            var Book = response[i];
+                            var tr = "<tr><td>" + Book.Author + "</td>"
+                                + "<td>" + Book.Title + "</td>"
+                                + "<td>" + Book.YearPublished + "</td>"
+                                + "<td>" + Book.Publisher + "</td>"
+                                + "<td>" + Book.Genre + "</td>"
+                                + "</tr>";
+                            tableHTML += tr;
+                        }
+                        document.getElementById("books")
+                            .innerHTML = tableHTML;
+                    },
+                failure: function (response) {
+                    alert("Failure" + response.responseText);
+                },
+                error: function (response) {
+                    alert("Error" + response.responseText);
+                }
+            }
+
+        );
+    }
+
+    function search5() {
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Home/GetBooksByAll',
+                data: '{userinput: "' + document.getElementById("userinput").value
                     + '"}',
                 contentType: 'application/json; charset-utf-8',
                 dataType: 'json',
